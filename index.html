@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapitalMind AI | Smart Venture Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+        :root {
+            --bg-dark: #020617; 
+            --accent-blue: #3b82f6;
+            --glass: rgba(15, 23, 42, 0.8);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f1f5f9;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, .font-space { font-family: 'Space Grotesk', sans-serif; }
+
+        .crypto-header {
+            position: relative;
+            height: 320px;
+            width: 100%;
+            background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.3), var(--bg-dark));
+        }
+
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        .ai-textarea {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            border: 2px solid var(--accent-blue) !important;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            width: 100%;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .ai-textarea:focus {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            outline: none;
+        }
+
+        .neon-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: 0.3s;
+        }
+
+        .neon-input:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            transition: all 0.3s ease;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.5);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-up { animation: fadeInUp 0.6s ease-out forwards; }
+        main { width: 100%; max-width: 1000px; margin: 0 auto; }
+    </style>
+</head>
+<body class="pb-10">
+
+    <div class="crypto-header">
+        <div class="header-overlay"></div>
+        <div class="relative z-10 text-center px-6">
+            <div class="inline-block px-4 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 text-[10px] font-bold mb-3 tracking-[3px] uppercase">
+                AI Financial Analysis System
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-2">CapitalMind <span class="text-blue-500">AI</span></h1>
+            <p class="text-slate-300 max-w-lg mx-auto text-sm md:text-base">Experience data-driven market predictions in any language.</p>
+        </div>
+    </div>
+
+    <main class="px-4 -mt-10 relative z-20">
+        
+        <section id="main-form" class="glass-panel p-6 md:p-8 animate-up">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold flex items-center gap-2">
+                        <i class="fas fa-chart-pie text-blue-500"></i> Setup Parameters
+                    </h3>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 ml-1">Capital (₦)</label>
+                        <input type="number" id="capital" placeholder="e.g. 500000" class="w-full neon-input">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 ml-1">Market Location</label>
+                        <input type="text" id="location" placeholder="e.g. Kano, Nigeria" class="w-full neon-input">
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold flex items-center gap-2">
+                        <i class="fas fa-comment-dots text-purple-500"></i> AI Query
+                    </h3>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 ml-1">Describe your goal (Any language)</label>
+                        <textarea id="interest" rows="3" dir="auto" 
+                            placeholder="Rubuta bayanin sana'ar ka anan..." 
+                            class="ai-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button id="submit-btn" onclick="runAI()" class="analyze-btn w-full py-4 rounded-xl text-white font-bold text-lg flex items-center justify-center gap-3">
+                <span>GENERATE STRATEGY</span>
+                <i class="fas fa-wand-magic-sparkles"></i>
+            </button>
+        </section>
+
+        <div id="loader" class="hidden flex flex-col items-center justify-center py-20 space-y-4">
+            <div class="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+            <p class="text-slate-400 animate-pulse">Analyzing global market nodes...</p>
+        </div>
+
+        <section id="results" class="hidden mt-8 space-y-6 animate-up">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="glass-panel p-5 border-l-4 border-blue-500">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase">Investment</p>
+                    <h4 id="stat-capital" class="text-xl font-bold mt-1 text-white">₦0.00</h4>
+                </div>
+                <div class="glass-panel p-5 border-l-4 border-green-500">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase">Growth Projection</p>
+                    <h4 id="stat-profit" class="text-xl font-bold mt-1 text-green-400">High Potential</h4>
+                </div>
+                <div class="glass-panel p-5 border-l-4 border-yellow-500">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase">Risk Rating</p>
+                    <h4 id="stat-risk" class="text-xl font-bold mt-1 text-white">Dynamic</h4>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 md:p-10">
+                <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
+                    <div class="h-8 w-1 bg-blue-500 rounded-full"></div>
+                    <h3 class="text-xl font-bold">Strategic Intelligence Report</h3>
+                </div>
+                <div id="ai-content" dir="auto" class="text-slate-300 leading-relaxed text-base space-y-4"></div>
+
+                <div class="mt-10 flex flex-wrap gap-3">
+                    <button onclick="copyToClipboard()" class="flex-1 bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 px-6 py-3 rounded-xl font-bold transition flex items-center justify-center gap-2">
+                        <i class="far fa-copy"></i> Copy
+                    </button>
+                    <button onclick="window.print()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-xl font-bold transition flex items-center justify-center gap-2">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </button>
+                    <button onclick="resetUI()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition">
+                        New Task
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-500 z-50 flex items-center gap-3">
+        <i id="toast-icon" class="fas fa-check-circle"></i>
+        <span id="toast-text">Success</span>
+    </div>
+
+    <script type="module">
+        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+        
+        const API_KEY = "AIzaSyDo7WaZSHytqJcNwE9XvLxfjoAPVJrxkGc";
+        const genAI = new GoogleGenerativeAI(API_KEY);
+
+        window.runAI = async () => {
+            const capital = document.getElementById('capital').value;
+            const loc = document.getElementById('location').value;
+            const desc = document.getElementById('interest').value;
+
+            if(!capital || !loc) {
+                notify("Don Allah shigar da jari da gari!", "bg-red-500");
+                return;
+            }
+
+            // Shiga yanayin loading
+            document.getElementById('main-form').classList.add('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+
+            try {
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                const prompt = `Act as a Fintech AI Consultant. 
+                               Inputs: Capital: ${capital}, Location: ${loc}, Business Idea: ${desc}.
+                               Language: If the user writes in Hausa, reply in Hausa. If English, reply in English.
+                               Provide: 1. Recommendation, 2. Profit Estimate, 3. Risk Level, 4. Local Market Steps.
+                               Format with bold headers and clean bullet points.`;
+
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                const text = response.text();
+                
+                displayResults(text, capital);
+            } catch (err) {
+                // GYARA: Idan an samu error, dawo da form din domin user ya sake gwadawa
+                console.error(err);
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('main-form').classList.remove('hidden');
+                notify("Matsalar Network ko API key. Sake gwadawa!", "bg-red-600");
+            }
+        };
+
+        function displayResults(text, capital) {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('stat-capital').innerText = `₦${Number(capital).toLocaleString()}`;
+            
+            let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            document.getElementById('ai-content').innerHTML = formattedText.replace(/\n/g, '<br>');
+        }
+
+        window.resetUI = () => {
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('main-form').classList.remove('hidden');
+            document.getElementById('loader').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.copyToClipboard = () => {
+            const content = document.getElementById('ai-content').innerText;
+            navigator.clipboard.writeText(content);
+            notify("An kwafi rahoton cikin nasara!");
+        };
+
+        function notify(msg, color = "bg-blue-600") {
+            const t = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            
+            t.className = `fixed bottom-8 left-1/2 -translate-x-1/2 ${color} text-white px-8 py-4 rounded-2xl shadow-2xl transition-all duration-500 z-50 flex items-center gap-3 opacity-100`;
+            document.getElementById('toast-text').innerText = msg;
+            
+            if(color.includes('red')) {
+                icon.className = "fas fa-exclamation-triangle";
+            } else {
+                icon.className = "fas fa-check-circle";
+            }
+
+            setTimeout(() => t.classList.replace('opacity-100', 'opacity-0'), 4000);
+        }
+    </script>
+</body>
+</html>
