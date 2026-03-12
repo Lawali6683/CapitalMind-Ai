@@ -200,85 +200,79 @@
         <span id="toast-text">Success</span>
     </div>
 
-    <script type="module">
-        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-        
-        const API_KEY = "AIzaSyDo7WaZSHytqJcNwE9XvLxfjoAPVJrxkGc";
-        const genAI = new GoogleGenerativeAI(API_KEY);
+  <script type="module">
+    window.runAI = async () => {
+        const capital = document.getElementById('capital').value;
+        const loc = document.getElementById('location').value;
+        const desc = document.getElementById('interest').value;
 
-        window.runAI = async () => {
-            const capital = document.getElementById('capital').value;
-            const loc = document.getElementById('location').value;
-            const desc = document.getElementById('interest').value;
-
-            if(!capital || !loc) {
-                notify("Don Allah shigar da jari da gari!", "bg-red-500");
-                return;
-            }
-
-            // Shiga yanayin loading
-            document.getElementById('main-form').classList.add('hidden');
-            document.getElementById('loader').classList.remove('hidden');
-
-            try {
-                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-                const prompt = `Act as a Fintech AI Consultant. 
-                               Inputs: Capital: ${capital}, Location: ${loc}, Business Idea: ${desc}.
-                               Language: If the user writes in Hausa, reply in Hausa. If English, reply in English.
-                               Provide: 1. Recommendation, 2. Profit Estimate, 3. Risk Level, 4. Local Market Steps.
-                               Format with bold headers and clean bullet points.`;
-
-                const result = await model.generateContent(prompt);
-                const response = await result.response;
-                const text = response.text();
-                
-                displayResults(text, capital);
-            } catch (err) {
-                // GYARA: Idan an samu error, dawo da form din domin user ya sake gwadawa
-                console.error(err);
-                document.getElementById('loader').classList.add('hidden');
-                document.getElementById('main-form').classList.remove('hidden');
-                notify("Matsalar Network ko API key. Sake gwadawa!", "bg-red-600");
-            }
-        };
-
-        function displayResults(text, capital) {
-            document.getElementById('loader').classList.add('hidden');
-            document.getElementById('results').classList.remove('hidden');
-            document.getElementById('stat-capital').innerText = `₦${Number(capital).toLocaleString()}`;
-            
-            let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            document.getElementById('ai-content').innerHTML = formattedText.replace(/\n/g, '<br>');
+        if(!capital || !loc) {
+            notify("Please enter your capital and location!", "bg-red-500");
+            return;
         }
 
-        window.resetUI = () => {
-            document.getElementById('results').classList.add('hidden');
+        document.getElementById('main-form').classList.add('hidden');
+        document.getElementById('loader').classList.remove('hidden');
+
+        try {
+            const response = await fetch("https://capitalmindai.pages.dev/api/data", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    capital: capital,
+                    loc: loc,
+                    desc: desc,
+                    password: "@haruna66"
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.error) throw new Error(data.error);
+
+            displayResults(data.text, capital);
+
+        } catch (err) {
+            console.error(err);
+            document.getElementById('loader').classList.add('hidden');
             document.getElementById('main-form').classList.remove('hidden');
-            document.getElementById('loader').classList.add('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.copyToClipboard = () => {
-            const content = document.getElementById('ai-content').innerText;
-            navigator.clipboard.writeText(content);
-            notify("An kwafi rahoton cikin nasara!");
-        };
-
-        function notify(msg, color = "bg-blue-600") {
-            const t = document.getElementById('toast');
-            const icon = document.getElementById('toast-icon');
-            
-            t.className = `fixed bottom-8 left-1/2 -translate-x-1/2 ${color} text-white px-8 py-4 rounded-2xl shadow-2xl transition-all duration-500 z-50 flex items-center gap-3 opacity-100`;
-            document.getElementById('toast-text').innerText = msg;
-            
-            if(color.includes('red')) {
-                icon.className = "fas fa-exclamation-triangle";
-            } else {
-                icon.className = "fas fa-check-circle";
-            }
-
-            setTimeout(() => t.classList.replace('opacity-100', 'opacity-0'), 4000);
+            notify("Connection error. Please try again later!", "bg-red-600");
         }
-    </script>
+    };
+
+    function displayResults(text, capital) {
+        document.getElementById('loader').classList.add('hidden');
+        document.getElementById('results').classList.remove('hidden');
+        document.getElementById('stat-capital').innerText = `₦${Number(capital).toLocaleString()}`;
+        
+        let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        document.getElementById('ai-content').innerHTML = formattedText.replace(/\n/g, '<br>');
+    }
+
+    window.resetUI = () => {
+        document.getElementById('results').classList.add('hidden');
+        document.getElementById('main-form').classList.remove('hidden');
+        document.getElementById('loader').classList.add('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.copyToClipboard = () => {
+        const content = document.getElementById('ai-content').innerText;
+        navigator.clipboard.writeText(content);
+        notify("Report copied to clipboard!");
+    };
+
+    function notify(msg, color = "bg-blue-600") {
+        const t = document.getElementById('toast');
+        const icon = document.getElementById('toast-icon');
+        const text = document.getElementById('toast-text');
+
+        t.className = `fixed bottom-8 left-1/2 -translate-x-1/2 ${color} text-white px-8 py-4 rounded-2xl shadow-2xl transition-all duration-500 z-50 flex items-center gap-3 opacity-100`;
+        text.innerText = msg;
+        icon.className = color.includes('red') ? "fas fa-exclamation-triangle" : "fas fa-check-circle";
+
+        setTimeout(() => t.classList.replace('opacity-100', 'opacity-0'), 4000);
+    }
+</script>
 </body>
 </html>
