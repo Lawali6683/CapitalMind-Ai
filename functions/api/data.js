@@ -1,12 +1,13 @@
 export async function onRequest(context) {
   const { request, env } = context;
-  
+
   const origin = request.headers.get("Origin") || "*";
+
   const corsHeaders = {
     "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Max-Age": "86400",
+    "Access-Control-Max-Age": "86400"
   };
 
   if (request.method === "OPTIONS") {
@@ -38,30 +39,41 @@ export async function onRequest(context) {
     }
 
     const promptText = `
-      Act as a Fintech AI Consultant.
-      Inputs:
-      Capital: ${capital}
-      Location: ${loc}
-      Business Idea: ${desc}
-      Language Rule:
-      If user writes in Hausa reply in Hausa.
-      If user writes in English reply in English.
-      Provide:
-      1. Recommendation
-      2. Profit Estimate
-      3. Risk Level
-      4. Local Market Steps
-      Format using bold headers and clean bullet points.
-    `;
+Act as a Fintech AI Consultant.
 
-const apiURL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${env.GEMINI_API_KEY}`;
-    
+Inputs:
+Capital: ${capital}
+Location: ${loc}
+Business Idea: ${desc}
+
+Language Rule:
+If user writes in Hausa reply in Hausa.
+If user writes in English reply in English.
+
+Provide:
+1. Recommendation
+2. Profit Estimate
+3. Risk Level
+4. Local Market Steps
+
+Format using bold headers and clean bullet points.
+`;
+
+    const apiURL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${env.GEMINI_API_KEY}`;
 
     const geminiResponse = await fetch(apiURL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: promptText }] }]
+        contents: [
+          {
+            parts: [
+              { text: promptText }
+            ]
+          }
+        ]
       })
     });
 
@@ -71,7 +83,7 @@ const apiURL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-f
       throw new Error(data.error.message || "Gemini API Error");
     }
 
-    const aiText = data.candidates[0].content.parts[0].text;
+    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
 
     return new Response(
       JSON.stringify({ text: aiText }),
