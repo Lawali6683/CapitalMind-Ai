@@ -1,5 +1,5 @@
 export async function onRequest(context) {
-  const { request, env } = context;
+  const { request } = context;
   
   const origin = request.headers.get("Origin") || "*";
   const corsHeaders = {
@@ -30,12 +30,8 @@ export async function onRequest(context) {
       );
     }
 
-    if (!env.GEMINI_API_KEY) {
-      return new Response(
-        JSON.stringify({ error: "API Key missing in Cloudflare Dashboard" }),
-        { status: 500, headers: corsHeaders }
-      );
-    }
+    const OPENROUTER_API_KEY = "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";
+    const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
     const promptText = `
       Act as a Fintech AI Consultant.
@@ -43,9 +39,11 @@ export async function onRequest(context) {
       Capital: ${capital}
       Location: ${loc}
       Business Idea: ${desc}
+
       Language Rule:
-      If user writes in Hausa reply in Hausa.
-      If user writes in English reply in English.
+      If user writes in Hausa, reply in Hausa.
+      If user writes in English, reply in English.
+
       Provide:
       1. Recommendation
       2. Profit Estimate
@@ -54,24 +52,30 @@ export async function onRequest(context) {
       Format using bold headers and clean bullet points.
     `;
 
-const apiURL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${env.GEMINI_API_KEY}`;
-    
-
-    const geminiResponse = await fetch(apiURL, {
+    const response = await fetch(OPENROUTER_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://capitalmindai.pages.dev", // Optional
+        "X-Title": "CapitalMind AI" // Optional
+      },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: promptText }] }]
+        model: "openai/gpt-4o-mini",
+        messages: [
+          { role: "system", content: "You are a professional Fintech Consultant." },
+          { role: "user", content: promptText }
+        ]
       })
     });
 
-    const data = await geminiResponse.json();
+    const data = await response.json();
 
     if (data.error) {
-      throw new Error(data.error.message || "Gemini API Error");
+      throw new Error(data.error.message || "OpenRouter API Error");
     }
 
-    const aiText = data.candidates[0].content.parts[0].text;
+    const aiText = data.choices[0].message.content;
 
     return new Response(
       JSON.stringify({ text: aiText }),
