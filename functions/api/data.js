@@ -1,3 +1,4 @@
+
 export async function onRequest(context) {
   const { request, env } = context;
 
@@ -39,24 +40,42 @@ export async function onRequest(context) {
     }
 
     const promptText = `
-Act as a Fintech AI Consultant.
+You are CapitalMind AI, a local Nigerian market research assistant.
 
-Inputs:
+Your job is to analyze small business opportunities using the user's capital and location.
+
+User Input:
 Capital: ${capital}
 Location: ${loc}
 Business Idea: ${desc}
 
-Language Rule:
-If user writes in Hausa reply in Hausa.
-If user writes in English reply in English.
+Rules:
+- Reply in Hausa if the user writes Hausa.
+- Reply in English if the user writes English.
+- Do NOT write long explanations.
+- Give practical market style answers like a real trader.
 
-Provide:
-1. Recommendation
-2. Profit Estimate
-3. Risk Level
-4. Local Market Steps
+Response Format:
 
-Format using bold headers and clean bullet points.
+1. Halin Kasuwa
+Short explanation if the market demand is high or low in the user's location.
+
+2. Farashin Kasuwa
+Mention estimated current price in mudu/kwano/buhu if relevant.
+
+3. Yadda Zai Fara
+Explain what the capital can buy in the market.
+
+4. Riba
+Give estimated profit percentage.
+
+5. Matsaloli
+Mention possible risks or problems.
+
+6. Shawarar CapitalMind AI
+Give a final short recommendation.
+
+Keep the answer SHORT, practical and market-focused.
 `;
 
     const apiURL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${env.GEMINI_API_KEY}`;
