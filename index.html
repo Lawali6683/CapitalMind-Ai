@@ -140,7 +140,7 @@
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 ml-1">Describe your goal (Any language)</label>
                         <textarea id="interest" rows="3" dir="auto" 
-                            placeholder="Rubuta bayanin sana'ar ka anan..." 
+                            placeholder="write which business you want to start? Or information..." 
                             class="ai-textarea"></textarea>
                     </div>
                 </div>
@@ -255,13 +255,27 @@
 
     
       
+window.resetUI = () => {
+    // 1. Share dukkan inputs
+    document.getElementById('capital').value = '';
+    document.getElementById('location').value = '';
+    document.getElementById('interest').value = '';
+    
+    // 2. Share tsohon sakon AI
+    document.getElementById('ai-content').innerHTML = '';
+    document.getElementById('stat-capital').innerText = '₦0.00';
+    
+    // 3. Mayar da UI farko
+    document.getElementById('results').classList.add('hidden');
+    document.getElementById('main-form').classList.remove('hidden');
+    document.getElementById('loader').classList.add('hidden');
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
-    window.resetUI = () => {
-        document.getElementById('results').classList.add('hidden');
-        document.getElementById('main-form').classList.remove('hidden');
-        document.getElementById('loader').classList.add('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+
+   
+       
 
     window.copyToClipboard = () => {
         const content = document.getElementById('ai-content').innerText;
